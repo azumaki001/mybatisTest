@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.mapper.TestEntityMapper">
+
+  <select id="selectById" parameterType="int" resultType="test.entity.TestEntity">
+    select * from testtemp1 where id = #{id} order by nick_name;
+  </select>
+
+  <insert id="insertAll" parameterType="test.entity.TestEntity" >
+    insert into testtemp1 (id,nick_name,full_name) values (#{id}, #{nick_name},#{full_name});
+  </insert>
+
+</mapper>
