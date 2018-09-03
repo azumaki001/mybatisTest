@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  SYSTEM "mybatis-3-mapper.dtd">
+
+<mapper namespace="seisan.rest.mysql">
+
+  <select id="SELECT_ATOB" resultType="UserAUserB_RESULT">
+    select
+      a.ad_detail_id as adNum
+      ,a.pay_id as payNum
+      ,a.ad_amount as amount
+      ,ua.name as userNmFrom
+      ,ub.name as userNmTo
+      ,a.ad_date as addate
+      ,a.ad_done as addone
+      ,p.pay_content as `use`
+      ,a.ad_from as userIdFrom
+      ,a.ad_to as userIdTo
+    from
+      seisan.adjustment_detail a
+    inner join
+      seisan.pay_biz p
+    on a.pay_id = p.pay_id
+    left join
+      seisan.user_mst ua
+    on a.ad_from = ua.id
+    left join
+      seisan.user_mst ub
+    on a.ad_to = ub.id
+    where
+    <if test="userA != null">
+      a.ad_from = #{userA}
+    and
+    </if>
+    <if test="userB != null">
+      a.ad_to = #{userB}
+    and
+    </if>
+      a.ad_done &lt;&gt; 1
+    order by
+      ad_done desc,
+      ad_amount desc
+  </select>
+
+</mapper>

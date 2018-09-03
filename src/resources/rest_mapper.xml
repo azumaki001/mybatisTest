@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="seisan.rest.mysql">
+
+  <select id="SELECT_FROM_USERMST" resultType="map">
+    select * from user_mst
+  </select>
+
+  <select id="SELECT_SIHARAI" resultType="SelectSiharaiEntity">
+    SELECT
+        B.pay_id as payId,
+        B.pay_amount as payAmount,
+        B.pay_payer as payer,
+        B.pay_for_users as payForusers,
+        B.pay_content as payContent,
+        DATE_FORMAT(B.regist_date, '%Y-%c-%e %k:%i:%s') as registDate,
+        GROUP_CONCAT(D.ad_from) as adFrom,
+        GROUP_CONCAT(D.ad_done) as adDone,
+        GROUP_CONCAT(D.ad_amount) as adAmount,
+        GROUP_CONCAT(D.ad_date) as adDate
+    FROM
+        seisan.pay_biz as B
+    INNER JOIN
+        seisan.adjustment_detail as D
+    ON
+        B.pay_id = D.pay_id
+    GROUP BY
+        pay_amount,pay_payer,pay_for_users,pay_content,regist_date
+    ORDER BY
+        B.regist_date desc
+  </select>
+</mapper>

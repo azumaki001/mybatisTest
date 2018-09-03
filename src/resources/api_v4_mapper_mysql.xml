@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  SYSTEM "mybatis-3-mapper.dtd">
+
+<mapper namespace="seisan.rest.mysql">
+
+  <select id="SELECT_ADEVENTID" resultType="DECIMAL">
+    select seisan._nextval('ad_event')
+  </select>
+
+  <insert id="INSERT_AD_EVENT">
+    insert into
+      seisan.adjustment_event (
+      event_id,
+      detail_ids,
+      event_amount,
+      event_date,
+      event_from,
+      event_to)
+    values (
+      #{EVENT_ID},
+      #{DETAIL_IDS},
+      #{EVENT_AMOUNT},
+      now(),
+      #{EVENT_FROM},
+      #{EVENT_TO})
+  </insert>
+
+  <update id="UPDATE_ADJUSTMENT_DETAIL">
+    update
+      seisan.adjustment_detail
+    set
+      ad_date = now(),
+      ad_done = '1'
+    where
+      ad_detail_id in
+    <foreach collection="array" item="item" open="(" separator="," close=")">
+       #{item}
+    </foreach>
+  </update>
+</mapper>

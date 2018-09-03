@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  SYSTEM "mybatis-3-mapper.dtd">
+
+<mapper namespace="seisan.rest.mysql">
+
+  <resultMap id="rm_select_siharai" type="PayList" >
+    <id column="payId" property="payId" />
+    <collection property="details" ofType="Detail" >
+      <id column="name" property="name" />
+    </collection>
+  </resultMap>
+
+  <select id="SELECT_FROM_USERMST" resultType="UserMst">
+    select * from user_mst
+  </select>
+
+  <select id="SELECT_SIHARAI" resultMap="rm_select_siharai">
+    select
+      b.pay_id as payId
+      , b.pay_amount as payAmount
+      , b.pay_payer as payer
+      , b.pay_for_users as payForusers
+      , b.pay_content as payContent
+      , date_format(b.regist_date, '%y-%c-%e %k:%i:%s') as registDate
+	  , u.name as name
+      , d.ad_done as done
+      , d.ad_amount as amount
+      , date_format(d.ad_date, '%y-%c-%e %k:%i:%s') as addate
+    from
+      seisan.pay_biz b
+    left outer join
+      seisan.adjustment_detail d
+    on
+      b.pay_id = d.pay_id
+    left outer join
+      seisan.user_mst u
+    on
+      d.ad_from = u.id
+    order by
+      b.regist_date desc
+  </select>
+</mapper>
